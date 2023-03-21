@@ -28,5 +28,14 @@ export default class TicketTypeRequest {
     return this.#type;
   }
 
+  getTicketPrice(){
+    return this.#Prices[this.#type.toUpperCase()]
+  }
+
   #Type = ['ADULT', 'CHILD', 'INFANT'];
+  #Prices = {
+    "ADULT" : 20,
+    "CHILD" : 10,
+    "INFANT" : 0
+  }
 }
