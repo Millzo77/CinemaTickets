@@ -4,7 +4,7 @@ const ticketService = new TicketService()
 export const ticketPurchase = ((req, res) => {
     try{
         var response = ticketService.purchaseTickets(req.body.accountId, req.body.tickets)
-        res.send(response)
+        res.sendStatus(response)
     }
     catch(error){
         return res.status(500).json({

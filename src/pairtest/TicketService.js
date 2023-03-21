@@ -1,5 +1,7 @@
 import TicketTypeRequest from './lib/TicketTypeRequest.js';
 import InvalidPurchaseException from './lib/InvalidPurchaseException.js';
+import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js'
+import SeatReservationService from '../thirdparty/seatbooking/SeatReservationService.js'
 
 export default class TicketService {
   /**
@@ -22,7 +24,18 @@ export default class TicketService {
         ticketClasses[key] = new TicketTypeRequest(key, tickets[key])
       })
 
-    return this.authoriseTickets(ticketClasses)
+    this.authoriseTickets(ticketClasses)
+
+    var totalPrice = this.calculateTicketPrices(ticketClasses)
+    var totalSeating = this.calculateSeating(ticketClasses)
+    var paymentService = new TicketPaymentService()
+    var seatingService = new SeatReservationService()
+
+    console.log("Total price is: £" + totalPrice)
+    console.log("Total seating required is: " + totalSeating + " seats.")
+
+    paymentService.makePayment(accountId, totalPrice)
+    seatingService.reserveSeat(accountId, totalSeating)
 
     return 200
   }
@@ -44,5 +57,21 @@ export default class TicketService {
     if( (adult.getNoOfTickets() + child.getNoOfTickets() + infant.getNoOfTickets()) > 20){
       throw new InvalidPurchaseException("You can only order a maximum of 20 tickets.")
     }
+
+    console.log("Tickets authorised...")
+  }
+
+  calculateTicketPrices(tickets){
+    var adult = tickets["ADULT"]
+    var child = tickets["CHILD"]
+
+    return adult.getTotalTicketPrice() + child.getTotalTicketPrice()
+  }
+
+  calculateSeating(tickets){
+    var adult = tickets["ADULT"]
+    var child = tickets["CHILD"]
+
+    return adult.getNoOfTickets() + child.getNoOfTickets()
   }
 }

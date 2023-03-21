@@ -32,6 +32,10 @@ export default class TicketTypeRequest {
     return this.#Prices[this.#type.toUpperCase()]
   }
 
+  getTotalTicketPrice(){
+    return (this.#Prices[this.#type.toUpperCase()]) * this.getNoOfTickets()
+  }
+
   #Type = ['ADULT', 'CHILD', 'INFANT'];
   #Prices = {
     "ADULT" : 20,
