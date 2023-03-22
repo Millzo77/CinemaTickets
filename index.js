@@ -1,5 +1,5 @@
 import express from 'express';
-import {ticketRouter} from './routers/ticketRouter.js';
+import {ticketRouter} from './src/routers/ticketRouter.js';
 const app = express();
 const port = process.env.PORT || 3000;
 

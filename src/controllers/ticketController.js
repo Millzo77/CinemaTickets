@@ -1,4 +1,4 @@
-import TicketService from '../src/pairtest/TicketService.js';
+import TicketService from '../pairtest/TicketService.js';
 const ticketService = new TicketService();
 
 export const ticketPurchase = ((req, res) => {
