@@ -13,5 +13,8 @@ app.get('/', (req, res) => {
 app.use('/tickets', ticketRouter);
 
 app.listen(port, () => {
-  console.log(`CinemaTickets app listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });
+
+export default app;
+
