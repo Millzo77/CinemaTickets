@@ -1,4 +1,3 @@
-import TicketTypeRequest from './lib/TicketTypeRequest.js';
 import InvalidPurchaseException from './lib/InvalidPurchaseException.js';
 import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js';
 import SeatReservationService from '../thirdparty/seatbooking/SeatReservationService.js';
@@ -22,27 +21,34 @@ export default class TicketService {
     const ticketData = ticketHelper.validateTicketTypes(tickets);
     const purchasedTickets = ticketHelper.generatePurchasedTicketsJSON(ticketData);
 
-    ticketHelper.authoriseTickets(ticketData);
+    const authorised = ticketHelper.authoriseTickets(ticketData);
 
-    const totalPrice = ticketHelper.calculateTicketPrices(ticketData);
-    const totalSeating = ticketHelper.calculateSeating(ticketData);
-    const paymentService = new TicketPaymentService();
-    const seatingService = new SeatReservationService();
+    if(authorised){
+      const totalPrice = ticketHelper.calculateTicketPrices(ticketData);
+      const totalSeating = ticketHelper.calculateSeating(ticketData);
+      const paymentService = new TicketPaymentService();
+      const seatingService = new SeatReservationService();
 
-    console.log(`Total price is: £${totalPrice}`);
-    console.log(`Total seating required is: ${totalSeating} seats.`);
+      console.log(`Total price is: £${totalPrice}`);
+      console.log(`Total seating required is: ${totalSeating} seats.`);
 
-    paymentService.makePayment(accountId, totalPrice);
-    console.log(`Payment of £${totalPrice} has been successfully taken.`);
+      paymentService.makePayment(accountId, totalPrice);
+      console.log(`Payment of £${totalPrice} has been successfully taken.`);
 
-    seatingService.reserveSeat(accountId, totalSeating);
-    console.log(`${totalSeating} seats have been successfully reserved.`);
+      seatingService.reserveSeat(accountId, totalSeating);
+      console.log(`${totalSeating} seats have been successfully reserved.`);
 
-    return {
-      success: true,
-      purchasedTickets: purchasedTickets,
-      totalTicketPrice: totalPrice,
-      totalReservedSeats: totalSeating
+      return {
+        success: true,
+        purchasedTickets: purchasedTickets,
+        totalTicketPrice: totalPrice,
+        totalReservedSeats: totalSeating
+      }
+    }
+    return{
+      success: false,
+      status: 500,
+      message: "An unknown server error occured." 
     }
   }
 }

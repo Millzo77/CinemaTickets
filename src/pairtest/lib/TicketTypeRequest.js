@@ -3,13 +3,18 @@
  */
 
 export default class TicketTypeRequest {
+  //Ticket types are scaleable. Add a new ticket type to the ValidTicketTypes JSON alongside the price for the ticket.
+  static ValidTicketTypes = {
+    "ADULT" : 20,
+    "CHILD" : 10,
+    "INFANT" : 0
+  };
   #type;
-
   #noOfTickets;
 
   constructor(type, noOfTickets) {
-    if (!this.#Type.includes(type)) {
-      throw new TypeError(`type must be ${this.#Type.slice(0, -1).join(', ')}, or ${this.#Type.slice(-1)}`);
+    if (!Object.keys(TicketTypeRequest.ValidTicketTypes).includes(type)) {
+      throw new TypeError(`type must be ${this.#generateTypeError()}`);
     }
 
     if (!Number.isInteger(noOfTickets)) {
@@ -18,6 +23,19 @@ export default class TicketTypeRequest {
 
     this.#type = type;
     this.#noOfTickets = noOfTickets;
+  }
+
+  //Generates a dynamic string of every valid ticket type in the array.
+  #generateTypeError(){
+    var errorString = "";
+    Object.keys(TicketTypeRequest.ValidTicketTypes).forEach(ticketType => {
+      if(ticketType !== Object.keys(TicketTypeRequest.ValidTicketTypes)[Object.keys(TicketTypeRequest.ValidTicketTypes).length - 1]){
+        errorString += `${ticketType}, `;
+      } else{
+        errorString += `or ${ticketType}`;
+      }
+    });
+    return errorString;
   }
 
   getNoOfTickets() {
@@ -29,17 +47,10 @@ export default class TicketTypeRequest {
   }
 
   getTicketPrice(){
-    return this.#Prices[this.#type.toUpperCase()]
+    return TicketTypeRequest.ValidTicketTypes[this.#type.toUpperCase()];
   }
 
   getTotalTicketPrice(){
-    return (this.#Prices[this.#type.toUpperCase()]) * this.getNoOfTickets()
-  }
-
-  #Type = ['ADULT', 'CHILD', 'INFANT'];
-  #Prices = {
-    "ADULT" : 20,
-    "CHILD" : 10,
-    "INFANT" : 0
+    return (TicketTypeRequest.ValidTicketTypes[this.#type.toUpperCase()]) * this.getNoOfTickets();
   }
 }

@@ -1,24 +1,21 @@
 import TicketTypeRequest from './TicketTypeRequest.js';
 import InvalidPurchaseException from './InvalidPurchaseException.js';
-
 export default class TicketHelper {
-    #validTicketTypes = ['ADULT', 'CHILD', 'INFANT'];
-
     //Function to check ticket keys against the valid ticket types and removes any invalid keys.
     //This is useful as more types can be added at a later date and you will only have to add the
-    //new types to the validTicketType array and the one inside of the TicketTypeRequest.js along with the new price.
+    //new types to the TicketTypeRequest class.
     validateTicketTypes = (tickets) => {
         const validTickets = {};
         //Converting from the JSON to the TicketTypeRequest classes.
         Object.keys(tickets).forEach(key => {
-            if(this.#validTicketTypes.includes(key.toUpperCase())){
+            if(Object.keys(TicketTypeRequest.ValidTicketTypes).includes(key.toUpperCase())){
                 validTickets[key] = new TicketTypeRequest(key, tickets[key]);
             }
         });
 
         //Checks that all validTicketTypes are present, and if not, adds it in with 0 tickets purchased.
         //Checks for uppercase, lowercase and capitalised versions of the valid type array keys
-        this.#validTicketTypes.forEach(key => {
+        Object.keys(TicketTypeRequest.ValidTicketTypes).forEach(key => {
             if( !Object.keys(validTickets).includes(key) &&
                 !Object.keys(validTickets).includes(key.toLowerCase()) &&
                 !Object.keys(validTickets).includes(this.#capitaliseFirstLetter(key.toLowerCase()))){
@@ -62,22 +59,28 @@ export default class TicketHelper {
         }
 
         console.log("Tickets authorised...");
+        return true;
     }
 
     //Function to calculate the total ticket prices.
     calculateTicketPrices(tickets) {
-        const adult = tickets["ADULT"];
-        const child = tickets["CHILD"];
+        var total = 0;
+        Object.keys(tickets).forEach(key => {
+            total += tickets[key].getTotalTicketPrice();
+        });
 
-        return adult.getTotalTicketPrice() + child.getTotalTicketPrice();
+        return total;
     }
 
     //Function to calculate the total required seating.
     calculateSeating(tickets) {
-        const adult = tickets["ADULT"];
-        const child = tickets["CHILD"];
+        var total = 0;
+        Object.keys(tickets).forEach(key => {
+            if(tickets[key].getTicketType() !== "INFANT"){
+                total += tickets[key].getNoOfTickets();
+            }
+        });
 
-        //Infants do not take up a seat so aren't included in this calculation.
-        return adult.getNoOfTickets() + child.getNoOfTickets();
+        return total;
     }
 }
