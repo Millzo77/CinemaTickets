@@ -4,7 +4,7 @@ export default class TicketHelper {
     //Function to check ticket keys against the valid ticket types and removes any invalid keys.
     //This is useful as more types can be added at a later date and you will only have to add the
     //new types to the TicketTypeRequest class.
-    validateTicketTypes = (tickets) => {
+    static validateTicketTypes = (tickets) => {
         const validTickets = {};
         //Converting from the JSON to the TicketTypeRequest classes.
         Object.keys(tickets).forEach(key => {
@@ -26,12 +26,12 @@ export default class TicketHelper {
         return validTickets;
     }
 
-    #capitaliseFirstLetter(string) {
+    static #capitaliseFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     //Function to generate a JSON that contains all of the ticket keys with their number of tickets purchased.
-    generatePurchasedTicketsJSON(tickets) {
+    static generatePurchasedTicketsJSON(tickets) {
         const purchasedTickets = {};
         Object.keys(tickets).forEach(key => {
             purchasedTickets[key] = tickets[key].getNoOfTickets();
@@ -41,7 +41,7 @@ export default class TicketHelper {
     }
 
     //Function to make sure the tickets are following the appropriate business logic.
-    authoriseTickets(tickets) {
+    static authoriseTickets(tickets) {
         const adult = tickets["ADULT"];
         const child = tickets["CHILD"];
         const infant = tickets["INFANT"];
@@ -63,7 +63,7 @@ export default class TicketHelper {
     }
 
     //Function to calculate the total ticket prices.
-    calculateTicketPrices(tickets) {
+    static calculateTicketPrices(tickets) {
         var total = 0;
         Object.keys(tickets).forEach(key => {
             total += tickets[key].getTotalTicketPrice();
@@ -73,7 +73,7 @@ export default class TicketHelper {
     }
 
     //Function to calculate the total required seating.
-    calculateSeating(tickets) {
+    static calculateSeating(tickets) {
         var total = 0;
         Object.keys(tickets).forEach(key => {
             if(tickets[key].getTicketType() !== "INFANT"){

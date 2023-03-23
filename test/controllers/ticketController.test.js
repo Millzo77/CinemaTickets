@@ -44,6 +44,7 @@ describe("Testing /tickets POST and business logic", () => {
         expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
         expect(response.body.success).toBe(false);
         expect(response.body.status).toBe(500);
+        expect(response.body.message).toBe("accountId must be valid.");
     });
 
     test("POST /tickets with ticket number over 20", async () => {
@@ -63,6 +64,7 @@ describe("Testing /tickets POST and business logic", () => {
           expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
           expect(response.body.success).toBe(false);
           expect(response.body.status).toBe(500);
+          expect(response.body.message).toBe("You can only order a maximum of 20 tickets at one time.");
       });
 
       test("POST /tickets with more infant than adult tickets", async () => {
@@ -82,6 +84,7 @@ describe("Testing /tickets POST and business logic", () => {
           expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
           expect(response.body.success).toBe(false);
           expect(response.body.status).toBe(500);
+          expect(response.body.message).toBe("You must have 1 adult ticket per infant ticket.");
       });
 
       test("POST /tickets with no adult tickets", async () => {
@@ -101,5 +104,6 @@ describe("Testing /tickets POST and business logic", () => {
           expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
           expect(response.body.success).toBe(false);
           expect(response.body.status).toBe(500);
+          expect(response.body.message).toBe("You must have at least 1 adult ticket.");
       });
   });

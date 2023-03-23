@@ -17,15 +17,14 @@ export default class TicketService {
       throw new InvalidPurchaseException("Tickets object must be valid.");
     }
 
-    const ticketHelper = new TicketHelper();
-    const ticketData = ticketHelper.validateTicketTypes(tickets);
-    const purchasedTickets = ticketHelper.generatePurchasedTicketsJSON(ticketData);
+    const ticketData = TicketHelper.validateTicketTypes(tickets);
+    const purchasedTickets = TicketHelper.generatePurchasedTicketsJSON(ticketData);
 
-    const authorised = ticketHelper.authoriseTickets(ticketData);
+    const authorised = TicketHelper.authoriseTickets(ticketData);
 
     if(authorised){
-      const totalPrice = ticketHelper.calculateTicketPrices(ticketData);
-      const totalSeating = ticketHelper.calculateSeating(ticketData);
+      const totalPrice = TicketHelper.calculateTicketPrices(ticketData);
+      const totalSeating = TicketHelper.calculateSeating(ticketData);
       const paymentService = new TicketPaymentService();
       const seatingService = new SeatReservationService();
 
